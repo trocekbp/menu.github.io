@@ -1,0 +1,30 @@
+<div id="pdf-viewer" style="width: 100%; height: 600px;"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+<script>
+  var url = 'menu.pdf'; // Ścieżka do Twojego PDF-a
+
+  // Wczytaj PDF.js
+  var loadingTask = pdfjsLib.getDocument(url);
+  loadingTask.promise.then(function(pdf) {
+    // Załaduj stronę
+    pdf.getPage(1).then(function(page) {
+      var scale = 1.5;
+      var viewport = page.getViewport({ scale: scale });
+
+      // Stwórz canvas dla wyświetlania PDF
+      var canvas = document.createElement('canvas');
+      var context = canvas.getContext('2d');
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+
+      document.getElementById('pdf-viewer').appendChild(canvas);
+
+      // Renderuj stronę PDF
+      var renderContext = {
+        canvasContext: context,
+        viewport: viewport
+      };
+      page.render(renderContext);
+    });
+  });
+</script>
